@@ -19,15 +19,17 @@ import museum from "@/assets/meu.png"
 export default function Venue() {
 
   /* ================= AUTO IMAGE SLIDER ================= */
-  const images = [rmk1, v2, v3]
-  const [index, setIndex] = useState(0)
+const campusImages = [rmk1, v2, v3]
+const [slideIndex, setSlideIndex] = useState(0)
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % images.length)
-    }, 3000)
-    return () => clearInterval(timer)
-  }, [])
+useEffect(() => {
+  const timer = setInterval(() => {
+    setSlideIndex((prev) => (prev + 1) % campusImages.length)
+  }, 3000)
+  return () => clearInterval(timer)
+}, [])
+
+
 
   return (
     <div className="min-h-screen bg-slate-50 pt-24 pb-20">
@@ -69,12 +71,50 @@ export default function Venue() {
           </div>
 
           {/* Auto Slider */}
-          <div className="rounded-3xl overflow-hidden shadow-2xl h-[420px]">
-            <img
-              src={images[index]}
-              className="w-full h-full object-cover transition-all duration-700"
-            />
-          </div>
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl h-[420px]">
+
+  <div className="relative rounded-3xl overflow-hidden shadow-2xl h-[420px]">
+
+  <div
+    className="flex transition-transform duration-700 ease-in-out h-full"
+    style={{ transform: `translateX(-${slideIndex * 100}%)` }}
+  >
+    {campusImages.map((img, i) => (
+      <img
+        key={i}
+        src={img}
+        className="w-full h-full object-cover flex-shrink-0"
+      />
+    ))}
+  </div>
+
+  {/* Left Arrow */}
+  <button
+    onClick={() =>
+      setSlideIndex(
+        slideIndex === 0 ? campusImages.length - 1 : slideIndex - 1
+      )
+    }
+    className="absolute top-1/2 left-4 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full hover:bg-black transition"
+  >
+    ❮
+  </button>
+
+  {/* Right Arrow */}
+  <button
+    onClick={() =>
+      setSlideIndex((slideIndex + 1) % campusImages.length)
+    }
+    className="absolute top-1/2 right-4 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full hover:bg-black transition"
+  >
+    ❯
+  </button>
+
+</div>
+
+
+</div>
+
 
         </div>
 

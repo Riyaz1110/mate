@@ -1,23 +1,64 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { SectionHeader } from "@/components/SectionHeader"
-
 import cover from "@/assets/25g1.jpg"
 
 import gallery1 from "@/assets/25g1.jpg"
 import gallery2 from "@/assets/25g2.jpg"
 import gallery3 from "@/assets/25g3.jpg"
 
-import yuchi from "@/assets/25g1.jpg"
-import sharon from "@/assets/25g1.jpg"
-import brenda from "@/assets/25g1.jpg"
-import dong1 from "@/assets/25g1.jpg"
-import dong2 from "@/assets/25g1.jpg"
-import graham from "@/assets/25g1.jpg"
+import yuchi from "@/assets/yuchi.mp4"
+import sharon from "@/assets/sharon2.mp4"
+import brenda from "@/assets/brendam.mp4"
+import dong1 from "@/assets/dong-seog-final_mY6bWp0S.mp4"
+import dong2 from "@/assets/dong.mp4"
+import graham from "@/assets/graham2.mp4"
+
+declare global {
+  interface Window {
+    YT: any
+    onYouTubeIframeAPIReady: any
+  }
+}
 
 export default function RMKMATE25() {
 
   const images = [gallery1, gallery2, gallery3]
   const [current, setCurrent] = useState(0)
+
+  const videoList = [
+    { src: yuchi, title: "Dr. Yuchi – Artificial Intelligence" },
+    { src: sharon, title: "Dr. Sharon – Future Communication Systems" },
+    { src: brenda, title: "Dr. Brenda – Research Methodologies" },
+    { src: dong1, title: "Dr. Dong Seog – Smart Systems" },
+    { src: dong2, title: "Dr. Dong – IoT Applications" },
+    { src: graham, title: "Dr. Graham – Industry 5.0 & Innovation" }
+  ]
+
+  const youtubeIds = [
+    "lYbcKaUxMUw",
+    "al4ndeSJ_CM",
+    "XzIR5pgzX6A"
+  ]
+
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
+  const ytPlayers = useRef<any[]>([])
+
+  const handlePlay = (index: number) => {
+    videoRefs.current.forEach((video, i) => {
+      if (video && i !== index) {
+        video.pause()
+        video.currentTime = 0
+      }
+    })
+  }
+
+  const pauseOtherYouTube = (index: number) => {
+    ytPlayers.current.forEach((player, i) => {
+      if (player && i !== index) {
+        player.pauseVideo()
+      }
+    })
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,10 +67,30 @@ export default function RMKMATE25() {
     return () => clearInterval(interval)
   }, [])
 
+  useEffect(() => {
+    const tag = document.createElement("script")
+    tag.src = "https://www.youtube.com/iframe_api"
+    document.body.appendChild(tag)
+
+    window.onYouTubeIframeAPIReady = () => {
+      youtubeIds.forEach((id, index) => {
+        ytPlayers.current[index] = new window.YT.Player(`youtube-${index}`, {
+          videoId: id,
+          events: {
+            onStateChange: (event: any) => {
+              if (event.data === window.YT.PlayerState.PLAYING) {
+                pauseOtherYouTube(index)
+              }
+            }
+          }
+        })
+      })
+    }
+  }, [])
+
   return (
     <div className="bg-slate-50 pt-24 pb-20">
 
-      {/* ================= HERO SECTION ================= */}
       <section className="relative bg-gradient-to-r from-indigo-900 via-blue-800 to-cyan-700 text-white py-24">
         <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
 
@@ -59,75 +120,47 @@ export default function RMKMATE25() {
         </div>
       </section>
 
-
-      {/* ================= ABOUT CONFERENCE ================= */}
-      <section className="container mx-auto px-6 mt-24">
-        <SectionHeader title="About the Conference" />
-
-        <div className="bg-white rounded-3xl shadow-xl p-10 text-gray-700 leading-relaxed">
-          RMKMATE’25 brings together global researchers,
-          academicians, and industry professionals to explore
-          emerging trends in Artificial Intelligence,
-          Knowledge Management, and Telecommunication Engineering.
-
-          <ul className="mt-6 grid md:grid-cols-2 gap-3 list-disc list-inside">
-            <li>Artificial Intelligence & Deep Learning</li>
-            <li>Knowledge Discovery & Data Mining</li>
-            <li>Natural Language Processing</li>
-            <li>IoT & Edge Computing</li>
-            <li>5G / 6G Communication Systems</li>
-            <li>Cyber Physical Systems</li>
-            <li>Quantum Computing</li>
-            <li>Information Security</li>
-          </ul>
-        </div>
-      </section>
-
-
-      {/* ================= YOUTUBE HIGHLIGHTS ================= */}
       <section className="container mx-auto px-6 mt-24">
         <SectionHeader title="Conference Highlights" />
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {[
-            "https://www.youtube.com/embed/lYbcKaUxMUw",
-            "https://www.youtube.com/embed/al4ndeSJ_CM",
-            "https://www.youtube.com/embed/XzIR5pgzX6A"
-          ].map((video, index) => (
-            <div key={index} className="rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition">
-              <iframe
-                className="w-full h-[280px]"
-                src={video}
-                allowFullScreen
-              />
+          {youtubeIds.map((id, index) => (
+            <div
+              key={index}
+              className="rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition"
+            >
+              <div id={`youtube-${index}`} className="w-full h-[280px]" />
             </div>
           ))}
         </div>
       </section>
 
-
-      {/* ================= KEYNOTE VIDEOS ================= */}
       <section className="container mx-auto px-6 mt-24">
         <SectionHeader title="Keynote Speaker Videos" />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-          {[yuchi, sharon, brenda, dong1, dong2, graham].map((video, index) => (
+          {videoList.map((video, index) => (
             <div
               key={index}
               className="bg-white rounded-2xl shadow-xl p-4 hover:shadow-2xl transition"
             >
-              <video controls className="rounded-xl w-full">
-                <source src={video} type="video/mp4" />
+              <video
+                controls
+                className="rounded-xl w-full"
+                ref={(el) => (videoRefs.current[index] = el)}
+                onPlay={() => handlePlay(index)}
+              >
+                <source src={video.src} type="video/mp4" />
               </video>
+
+              <p className="mt-4 text-center font-semibold text-gray-700">
+                {video.title}
+              </p>
             </div>
           ))}
-
         </div>
       </section>
 
-
-      {/* ================= GALLERY SLIDER ================= */}
       <section className="container mx-auto px-6 mt-24">
         <SectionHeader title="Conference Gallery" />
 
@@ -146,7 +179,6 @@ export default function RMKMATE25() {
             ))}
           </div>
 
-          {/* Left */}
           <button
             onClick={() =>
               setCurrent(current === 0 ? images.length - 1 : current - 1)
@@ -156,7 +188,6 @@ export default function RMKMATE25() {
             ❮
           </button>
 
-          {/* Right */}
           <button
             onClick={() =>
               setCurrent((current + 1) % images.length)
