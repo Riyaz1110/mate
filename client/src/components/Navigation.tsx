@@ -31,23 +31,24 @@ export function Navigation() {
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300 border-b",
         isScrolled
-          ? "bg-white/95 backdrop-blur-md shadow-md border-border/50 py-3"
-          : "bg-white border-transparent py-5"
+          ? "bg-white/95 backdrop-blur-md shadow-sm border-border/50 py-2"
+          : "bg-white border-transparent py-3"
+
       )}
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
 
         {/* ================= LOGO ================= */}
         <Link href="/">
-          <div className="flex items-center gap-3 cursor-pointer group">
+          <div className="flex items-center gap-2 cursor-pointer group">
             <img
               src={logo}
               alt="RMKMATE26 Logo"
-              className="h-10 w-10 object-contain group-hover:scale-105 transition-transform"
+              className="h-8 w-8 object-contain group-hover:scale-105 transition-transform"
             />
 
             <div className="flex flex-col">
-              <span className="font-display font-bold text-lg group-hover:text-primary">
+              <span className="font-display font-semibold text-base group-hover:text-primary">
                 RMKMATE2026
               </span>
               <span className="text-xs text-muted-foreground uppercase tracking-wider">
@@ -66,7 +67,7 @@ export function Navigation() {
             <Link key={link.href} href={link.href}>
               <div
                 className={cn(
-                  "px-4 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer",
+                  "px-3 py-1.5 text-sm font-medium rounded-md transition-colors cursor-pointer",
                   location === link.href
                     ? "text-primary bg-primary/5"
                     : "text-muted-foreground hover:text-primary hover:bg-secondary/50"
@@ -96,13 +97,13 @@ export function Navigation() {
               "
             >
               <Link href="/venue">
-                <div className="px-5 py-3 hover:bg-slate-100 rounded-t-xl cursor-pointer">
+                <div className="px-4 py-2 hover:bg-slate-100 rounded-t-xl cursor-pointer">
                   Conference Venue
                 </div>
               </Link>
 
               <Link href="/transportation">
-                <div className="px-5 py-3 hover:bg-slate-100 rounded-b-xl cursor-pointer">
+                <div className="px-4 py-2 hover:bg-slate-100 rounded-b-xl cursor-pointer">
                   Transportation
                 </div>
               </Link>
@@ -141,13 +142,13 @@ export function Navigation() {
               "
             >
               <Link href="/rmkmate23">
-                <div className="px-5 py-3 hover:bg-slate-100 rounded-t-xl cursor-pointer">
+                <div className="px-4 py-2 hover:bg-slate-100 rounded-t-xl cursor-pointer">
                   RMKMATE23
                 </div>
               </Link>
 
               <Link href="/rmkmate25">
-                <div className="px-5 py-3 hover:bg-slate-100 rounded-b-xl cursor-pointer">
+                <div className="px-4 py-2 hover:bg-slate-100 rounded-b-xl cursor-pointer">
                   RMKMATE25
                 </div>
               </Link>
